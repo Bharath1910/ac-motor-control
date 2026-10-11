@@ -35,18 +35,18 @@ pico_sdk_init()
 
 # Add executable. Default name is the project name, version 0.1
 
-add_executable(soft-starter main.cpp )
+add_executable(soft-starter main.cpp)
 
 pico_set_program_name(soft-starter "soft-starter")
 pico_set_program_version(soft-starter "0.1")
 
 # Modify the below lines to enable/disable output over UART/USB
 pico_enable_stdio_uart(soft-starter 0)
-pico_enable_stdio_usb(soft-starter 0)
+pico_enable_stdio_usb(soft-starter 1)
 
 # Add the standard library to the build
 target_link_libraries(soft-starter
-        pico_stdlib)
+        pico_stdlib hardware_adc)
 
 # Add the standard include files to the build
 target_include_directories(soft-starter PRIVATE
