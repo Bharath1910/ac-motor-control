@@ -10,8 +10,8 @@
 // https://youtu.be/Au-oc4hxj-c
 // https://stackoverflow.com/a/77935151
 
-#define TRIAC_OUT 2
-#define ZERO_CROSS_WATCH 3
+#define TRIAC_OUT 18
+#define ZERO_CROSS_WATCH 19
 #define MAX_WAIT_TIME 9900
 
 static char event_str[128];
@@ -32,7 +32,7 @@ void handleZeroCross(uint gpio, uint32_t events) {
     float voltage = result * conversion_factor;
     uint16_t wait_time = voltage * wait_factor;
     
-    printf("voltage: %f", voltage);
+    printf("voltage: %f\n", voltage);
     printf("wait time %d\n", wait_time);
     busy_wait_us(wait_time);
 
@@ -52,8 +52,8 @@ int main() {
     gpio_drive_strength(GPIO_DRIVE_STRENGTH_12MA);
 
     adc_init();
-    adc_gpio_init(26);
-    adc_select_input(0);
+    adc_gpio_init(27);
+    adc_select_input(1);
     
     gpio_set_irq_enabled_with_callback(
         ZERO_CROSS_WATCH, 
