@@ -46,7 +46,7 @@ pico_enable_stdio_usb(soft-starter 1)
 
 # Add the standard library to the build
 target_link_libraries(soft-starter
-        pico_stdlib hardware_adc)
+        pico_stdlib hardware_adc pico_multicore)
 
 # Add the standard include files to the build
 target_include_directories(soft-starter PRIVATE

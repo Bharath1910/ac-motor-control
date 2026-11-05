@@ -4,6 +4,7 @@
 #include "pico/time.h"
 #include "hardware/adc.h"
 #include "math.h"
+#include "pico/multicore.h"
 
 // Docs
 // https://github.com/raspberrypi/pico-examples/blob/master/adc/hello_adc/hello_adc.c
@@ -15,31 +16,24 @@
 #define MAX_WAIT_TIME 9900
 
 static char event_str[128];
+uint16_t wait_time = 0;
+
 void gpio_event_string(char *buf, uint32_t events);
 
 void handleZeroCross(uint gpio, uint32_t events) {
+    multicore_fifo_push_blocking(wait_time);
+}
 
-    uint32_t msSinceBoot = to_ms_since_boot(get_absolute_time());
-    printf("Time: %d\n", msSinceBoot);
-    
-    gpio_event_string(event_str, events);
-    printf("GPIO %d %s\n", gpio, event_str);
+void core1_loop() {
+    while (1) {
+        uint32_t wait_time = multicore_fifo_pop_blocking();
 
-    const float conversion_factor = 3.3f / (1 << 12);
-    const float wait_factor = MAX_WAIT_TIME / 3.3f;
+        busy_wait_us(wait_time);
 
-    uint16_t result = adc_read();
-    float voltage = result * conversion_factor;
-    uint16_t wait_time = voltage * wait_factor;
-    
-    printf("voltage: %f\n", voltage);
-    printf("wait time %d\n", wait_time);
-    busy_wait_us(wait_time);
-
-
-    gpio_put(TRIAC_OUT, true);
-    busy_wait_us(100);
-    gpio_put(TRIAC_OUT, false);
+        gpio_put(TRIAC_OUT, true);
+        busy_wait_us(50);
+        gpio_put(TRIAC_OUT, false);
+    }
 }
 
 int main() {
@@ -62,9 +56,19 @@ int main() {
         &handleZeroCross
     );
 
+    multicore_launch_core1(core1_loop);
+
     while (1) {
-        printf("waiting for interrutps\n");
-        sleep_ms(500);
+        printf("C0 waiting for interrutps\n");
+        
+        const float conversion_factor = 3.3f / (1 << 12);
+        const float wait_factor = MAX_WAIT_TIME / 3.3f;
+        
+        uint16_t result = adc_read();
+        float voltage = result * conversion_factor;
+        wait_time = voltage * wait_factor;
+
+        sleep_ms(1);
     };
 }
 
