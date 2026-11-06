@@ -1,0 +1,1 @@
+int core0_loop(uint16_t pWait_time);

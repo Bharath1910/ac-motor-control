@@ -35,7 +35,7 @@ pico_sdk_init()
 
 # Add executable. Default name is the project name, version 0.1
 
-add_executable(soft-starter main.cpp)
+add_executable(soft-starter main.cpp modules/core_one.cpp modules/core_zero.cpp)
 
 pico_set_program_name(soft-starter "soft-starter")
 pico_set_program_version(soft-starter "0.1")
