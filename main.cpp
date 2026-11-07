@@ -47,5 +47,5 @@ void startup() {
 
 int main() {
     startup();
-    core0_loop(wait_time);
+    core0_loop(&wait_time);
 }

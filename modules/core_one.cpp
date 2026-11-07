@@ -10,13 +10,10 @@
 // https://stackoverflow.com/a/77935151
 
 #define TRIAC_OUT 18
-#define ZERO_CROSS_WATCH 19
-#define MAX_WAIT_TIME 9900
 
 void core1_loop() {
     while (1) {
         uint32_t wait_time = multicore_fifo_pop_blocking();
-
         busy_wait_us(wait_time);
 
         gpio_put(TRIAC_OUT, true);
