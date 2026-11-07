@@ -18,10 +18,20 @@
 #define GREEN_LED 20
 #define YELLOW_LED 21 
 
-uint16_t wait_time = 0;
+uint16_t wait_time = 9800;
+uint16_t delay_step = 500;
 
 void zero_cross_callback(uint gpio, uint32_t events) {
-    multicore_fifo_push_blocking(wait_time);
+    printf("delay step %dus\n", delay_step);
+    if (wait_time < delay_step || wait_time == 0) {
+        multicore_fifo_push_blocking(0);
+        gpio_put(GREEN_LED, true);
+        gpio_put(YELLOW_LED, false);
+        return;
+    } else {
+        wait_time = wait_time - delay_step;
+        multicore_fifo_push_blocking(wait_time);
+    }
 }
 
 void startup() {
@@ -59,5 +69,5 @@ void startup() {
 
 int main() {
     startup();
-    core0_loop(&wait_time);
+    core0_loop(&delay_step);
 }
