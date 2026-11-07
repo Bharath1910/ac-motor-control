@@ -1,3 +1,6 @@
+> [!WARNING]
+> If you are trying to recreate this circuit. Proceed at your own risk.
+
 # AC Motor Speed Controller
 
 It is a simple speed controller for single phase AC motors rated for ~240V AC. It works by switching a triac with a delay measured after each zero cross point.
