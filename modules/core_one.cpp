@@ -13,7 +13,14 @@
 
 void core1_loop() {
     while (1) {
+        uint32_t offset_us = multicore_fifo_pop_blocking();
         uint32_t wait_time = multicore_fifo_pop_blocking();
+        
+        // The offset is only applied at the very end of the slow start loop
+        // Its to prevent any false triggering at the start of the start loop.
+        if (wait_time < (9900 / 8)) {
+            busy_wait_us(offset_us);
+        }
         busy_wait_us(wait_time);
 
         gpio_put(TRIAC_OUT, true);

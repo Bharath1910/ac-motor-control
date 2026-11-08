@@ -20,9 +20,11 @@
 
 uint16_t wait_time = 9800;
 uint16_t delay_step = 500;
+uint16_t offset_time_us = 0;
 
 void zero_cross_callback(uint gpio, uint32_t events) {
     printf("delay step %dus\n", delay_step);
+    multicore_fifo_push_blocking(offset_time_us);
     if (wait_time < delay_step || wait_time == 0) {
         multicore_fifo_push_blocking(0);
         gpio_put(GREEN_LED, true);
@@ -50,7 +52,7 @@ void startup() {
 
     adc_init();
     adc_gpio_init(27);
-    adc_select_input(1);
+    adc_gpio_init(26);
 
     gpio_put(GREEN_LED, true);
     gpio_put(YELLOW_LED, true);
@@ -69,5 +71,5 @@ void startup() {
 
 int main() {
     startup();
-    core0_loop(&delay_step);
+    core0_loop(&delay_step, &offset_time_us);
 }

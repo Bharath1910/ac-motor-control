@@ -1,1 +1,1 @@
-int core0_loop(uint16_t *pDelay_step);
+int core0_loop(uint16_t *pDelay_step, uint16_t *p_offset_us);
