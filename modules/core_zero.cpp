@@ -12,7 +12,7 @@
 // Example: 10s / (1 / 50) * 2
 #define MAX_ITERATIONS 1000
 
-int core0_loop(uint16_t *pDelay_step, uint16_t *p_offset_us) {
+int core0_loop(uint16_t *p_delay_step, uint16_t *p_offset_us) {
 	while (1) {
         printf("C0 waiting for interrutps\n");
         
@@ -33,9 +33,9 @@ int core0_loop(uint16_t *pDelay_step, uint16_t *p_offset_us) {
         int iteration_step = timer_voltage * iteration_factor;
 
         *p_offset_us = offset_voltage * offset_factor;
-        *pDelay_step = 9900 / iteration_step;
+        *p_delay_step = 9900 / iteration_step;
 
-        printf("delay step in core0: %dus\n", *pDelay_step);
+        printf("delay step in core0: %dus\n", *p_delay_step);
         printf("offset size in core0: %dus\n", *p_offset_us);
         sleep_ms(500);
     };
