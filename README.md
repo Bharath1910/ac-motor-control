@@ -15,11 +15,11 @@ Currently theres a misplaced Resistor R2 which causes the zero cross detection t
 
 **Schematic**
 
-![alt text](media/schematic.png)
+![schematic](media/schematic.png)
 
 **PCB Layout**
 
-![alt text](media/pcb_layout.png)
+![pcb_layout](media/pcb_layout.png)
 
 ## Zero Cross detection
 
@@ -43,5 +43,35 @@ The next version of the project will have the following safety precautions in pl
 - 10A fuse for over current protection
 - A Metal Oxide Varistor for overvoltage protection
 - RC Snubber across Triac to supress ringing
+
+---
+
+# Software Side
+
+Im not sure whether this is an optimal setup, but I have written the code to split the work as three seperate section
+
+1. Fetch configuration (Core 0)
+2. Interrupt handling (Core 0)
+3. Drive Triac (Core 1)
+
+I dedicated the entire Core 1 for timing the triac since I was not able to find a better way to incorporate everything into single core and offloading the timing task to Core 1 was also easier.
+
+### Fetching Configuration
+
+Code is available in `modules/core_zero.cpp`
+
+![core0_workflow](media/core0_workflow.png)
+
+### Interrupt Handling
+
+Code available in `main.cpp`
+
+![isr_workflow](media/isr_workflow.png)
+
+### Drive Triac
+
+Code available in `modules/core_one.cpp`
+
+![core1_workflow](media/core1_workflow.png)
 
 ---
