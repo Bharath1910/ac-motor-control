@@ -22,16 +22,7 @@ uint16_t delay_step = 500;
 uint16_t offset_time_us = 0;
 
 void zero_cross_callback(uint gpio, uint32_t events) {
-    multicore_fifo_push_blocking(offset_time_us);
-    if (wait_time < delay_step || wait_time == 0) {
-        multicore_fifo_push_blocking(0);
-        gpio_put(GREEN_LED, true);
-        gpio_put(YELLOW_LED, false);
-        return;
-    } else {
-        wait_time = wait_time - delay_step;
-        multicore_fifo_push_blocking(wait_time);
-    }
+    multicore_fifo_push_blocking(delay_step);
 }
 
 void startup() {
